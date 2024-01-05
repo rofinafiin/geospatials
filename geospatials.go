@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-func GeoIntersectQuery(client *mongo.Client, polygon [][]float64) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoIntersectQuery(client *mongo.Database, polygon [][][]float64) ([]LocationData, error) {
+	collection := client.Collection("location")
 
 	filter := bson.M{
 		"border": bson.M{
@@ -38,8 +38,8 @@ func GeoIntersectQuery(client *mongo.Client, polygon [][]float64) ([]LocationDat
 	return results, nil
 }
 
-func GeoWithinQuery(client *mongo.Client, polygon [][]float64) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoWithinQuery(client *mongo.Database, polygon [][][]float64) ([]LocationData, error) {
+	collection := client.Collection("location")
 	filter := bson.M{
 		"border": bson.M{
 			"$geoWithin": bson.M{
@@ -67,8 +67,8 @@ func GeoWithinQuery(client *mongo.Client, polygon [][]float64) ([]LocationData, 
 	return results, nil
 }
 
-func GeoNearQuery(client *mongo.Client, polygon [][]float64, maxDistance int) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoNearQuery(client *mongo.Database, polygon [][][]float64, maxDistance int) ([]LocationData, error) {
+	collection := client.Collection("location")
 	filter := bson.M{
 		"border": bson.M{
 			"$near": bson.M{
@@ -97,13 +97,13 @@ func GeoNearQuery(client *mongo.Client, polygon [][]float64, maxDistance int) ([
 	return results, nil
 }
 
-func GeoNearSphereQuery(client *mongo.Client, polygon [][]float64, radius int) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoNearSphereQuery(client *mongo.Database, polygon []float64, radius int) ([]LocationData, error) {
+	collection := client.Collection("location")
 	filter := bson.M{
 		"border": bson.M{
 			"$nearSphere": bson.M{
 				"$geometry": bson.M{
-					"type":        "Polygon",
+					"type":        "Point",
 					"coordinates": polygon,
 				},
 				"$maxDistance": radius,
@@ -128,8 +128,8 @@ func GeoNearSphereQuery(client *mongo.Client, polygon [][]float64, radius int) (
 	return results, nil
 }
 
-func GeoBoxQuery(client *mongo.Client, lowerLeft, upperRight []float64) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoBoxQuery(client *mongo.Database, lowerLeft, upperRight []float64) ([]LocationData, error) {
+	collection := client.Collection("location")
 	filter := bson.M{
 		"border": bson.M{
 			"$geoWithin": bson.M{
@@ -163,8 +163,8 @@ func GeoBoxQuery(client *mongo.Client, lowerLeft, upperRight []float64) ([]Locat
 	return results, nil
 }
 
-func GeoCenterQuery(client *mongo.Client, center []float64, radius int) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoCenterQuery(client *mongo.Database, center []float64, radius int) ([]LocationData, error) {
+	collection := client.Collection("location")
 
 	filter := bson.M{
 		"border": bson.M{
@@ -191,8 +191,8 @@ func GeoCenterQuery(client *mongo.Client, center []float64, radius int) ([]Locat
 	return results, nil
 }
 
-func GeoGeometryQuery(client *mongo.Client, geometry bson.M) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoGeometryQuery(client *mongo.Database, geometry bson.M) ([]LocationData, error) {
+	collection := client.Collection("location")
 	filter := bson.M{
 		"border": bson.M{
 			"$geoWithin": bson.M{
@@ -217,12 +217,12 @@ func GeoGeometryQuery(client *mongo.Client, geometry bson.M) ([]LocationData, er
 	return results, nil
 }
 
-func GeoMaxDistanceQuery(client *mongo.Client, point [][]float64, maxDistance int) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoMaxDistanceQuery(client *mongo.Database, point []float64, maxDistance int) ([]LocationData, error) {
+	collection := client.Collection("location")
 	filter := bson.M{
 		"border": bson.M{
 			"$near": bson.M{
-				"$geometry":    bson.M{"type": "Polygon", "coordinates": point},
+				"$geometry":    bson.M{"type": "Point", "coordinates": point},
 				"$maxDistance": maxDistance,
 			},
 		},
@@ -244,13 +244,13 @@ func GeoMaxDistanceQuery(client *mongo.Client, point [][]float64, maxDistance in
 	return results, nil
 }
 
-func GeoMinDistanceQuery(client *mongo.Client, point [][]float64, minDistance int) ([]LocationData, error) {
-	collection := client.Database("GIS").Collection("location")
+func GeoMinDistanceQuery(client *mongo.Database, point []float64, minDistance int) ([]LocationData, error) {
+	collection := client.Collection("location")
 
 	filter := bson.M{
 		"border": bson.M{
 			"$near": bson.M{
-				"$geometry":    bson.M{"type": "Polygon", "coordinates": point},
+				"$geometry":    bson.M{"type": "Point", "coordinates": point},
 				"$minDistance": minDistance,
 			},
 		},
