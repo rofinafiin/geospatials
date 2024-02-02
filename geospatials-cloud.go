@@ -17,6 +17,10 @@ func GeoIntersectcloud(publickey, Mongostring, dbname string, r *http.Request) s
 		resp.Status = false
 		resp.Message = "Header Login Not Exist"
 	} else {
+		err := json.NewDecoder(r.Body).Decode(&req)
+		if err != nil {
+			resp.Message = "error parsing application/json: " + err.Error()
+		}
 		existing := gcfbackend.IsExist(tokenlogin, os.Getenv(publickey))
 		if !existing {
 			resp.Status = false
@@ -45,6 +49,10 @@ func GeoNearcloud(publickey, Mongostring, dbname string, r *http.Request) string
 		resp.Status = false
 		resp.Message = "Header Login Not Exist"
 	} else {
+		err := json.NewDecoder(r.Body).Decode(&req)
+		if err != nil {
+			resp.Message = "error parsing application/json: " + err.Error()
+		}
 		existing := gcfbackend.IsExist(tokenlogin, os.Getenv(publickey))
 		if !existing {
 			resp.Status = false
