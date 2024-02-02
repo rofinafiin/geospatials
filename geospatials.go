@@ -67,7 +67,7 @@ func GeoWithinQuery(client *mongo.Database, polygon [][][]float64) ([]FullGeoJso
 	return results, nil
 }
 
-func GeoNearQuery(client *mongo.Database, polygon []float64, maxDistance, minDistance int) ([]FullGeoJson, error) {
+func GeoNearQuery(client *mongo.Database, polygon []float64, maxDistance, minDistance float64) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 	filter := bson.M{
 		"geometry": bson.M{

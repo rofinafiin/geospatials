@@ -25,8 +25,8 @@ type RequestGeoIntersects struct {
 
 type RequestGeonear struct {
 	Coordinates []float64 `bson:"coordinates" json:"coordinates"`
-	MinDistance int       `bson:"minDistance" json:"minDistance"`
-	MaxDistance int       `bson:"maxDistance" json:"maxDistance"`
+	MinDistance float64   `bson:"minDistance" json:"minDistance"`
+	MaxDistance float64   `bson:"maxDistance" json:"maxDistance"`
 }
 
 type Nearspherereq struct {
