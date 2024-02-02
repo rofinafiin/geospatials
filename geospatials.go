@@ -270,3 +270,37 @@ func GeoMinDistanceQuery(client *mongo.Database, point []float64, minDistance in
 
 	return results, nil
 }
+
+type GeoPolygonReq struct {
+	Polygon [][]float64 `json:"polygon" bson:"polygon"`
+}
+
+// Define the function for GeoPolygon query
+func GeoPolygonQuery(client *mongo.Database, polygon [][]float64) ([]FullGeoJson, error) {
+	// Actual implementation of the function
+	collection := client.Collection("geogis")
+
+	filter := bson.M{
+		"geometry": bson.M{
+			"$geoWithin": bson.M{
+				"$polygon": polygon,
+			},
+		},
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var results []FullGeoJson
+	if err := cursor.All(ctx, &results); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}

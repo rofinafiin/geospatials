@@ -171,6 +171,39 @@ func GeoBoxcloud(publickey, Mongostring, dbname string, r *http.Request) string 
 	return gcfbackend.ReturnStringStruct(resp)
 }
 
+func GeoPolygoncloud(publickey, Mongostring, dbname string, r *http.Request) string {
+	resp := new(pasproj.Credential)
+	req := new(GeoPolygonReq)
+	conn := pasproj.MongoCreateConnection(Mongostring, dbname)
+	tokenlogin := r.Header.Get("Login")
+	if tokenlogin == "" {
+		resp.Status = false
+		resp.Message = "Header Login Not Exist"
+	} else {
+		err := json.NewDecoder(r.Body).Decode(&req)
+		if err != nil {
+			resp.Message = "error parsing application/json: " + err.Error()
+		} else {
+			existing := gcfbackend.IsExist(tokenlogin, os.Getenv(publickey))
+			if !existing {
+				resp.Status = false
+				resp.Message = "Kamu kayaknya belum punya akun"
+			} else {
+				datageo, err := GeoPolygonQuery(conn, req.Polygon)
+				if err != nil {
+					resp.Status = false
+					resp.Message = err.Error()
+				}
+				jsoncihuy, _ := json.Marshal(datageo)
+				resp.Status = true
+				resp.Message = "Data Berhasil diambil"
+				resp.Token = string(jsoncihuy)
+			}
+		}
+	}
+	return gcfbackend.ReturnStringStruct(resp)
+}
+
 func GeoCentercloud(publickey, Mongostring, dbname string, r *http.Request) string {
 	resp := new(pasproj.Credential)
 	req := new(Nearspherereq)
