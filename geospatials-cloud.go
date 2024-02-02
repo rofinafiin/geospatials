@@ -36,6 +36,34 @@ func GeoIntersectcloud(publickey, Mongostring, dbname string, r *http.Request) s
 	return gcfbackend.ReturnStringStruct(resp)
 }
 
+func GeoNearcloud(publickey, Mongostring, dbname string, r *http.Request) string {
+	resp := new(pasproj.Credential)
+	req := new(RequestGeoIntersects)
+	conn := pasproj.MongoCreateConnection(Mongostring, dbname)
+	tokenlogin := r.Header.Get("Login")
+	if tokenlogin == "" {
+		resp.Status = false
+		resp.Message = "Header Login Not Exist"
+	} else {
+		existing := gcfbackend.IsExist(tokenlogin, os.Getenv(publickey))
+		if !existing {
+			resp.Status = false
+			resp.Message = "Kamu kayaknya belum punya akun"
+		} else {
+			datageo, err := GeoNearQuery(conn, req.Coordinates, 100)
+			if err != nil {
+				resp.Status = false
+				resp.Message = err.Error()
+			}
+			jsoncihuy, _ := json.Marshal(datageo)
+			resp.Status = true
+			resp.Message = "Data Berhasil diambil"
+			resp.Token = string(jsoncihuy)
+		}
+	}
+	return gcfbackend.ReturnStringStruct(resp)
+}
+
 func GeoWithincloud(publickey, Mongostring, dbname string, r *http.Request) string {
 	resp := new(pasproj.Credential)
 	req := new(RequestGeoIntersects)
