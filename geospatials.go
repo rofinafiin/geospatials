@@ -98,7 +98,7 @@ func GeoNearQuery(client *mongo.Database, polygon []float64, maxDistance, minDis
 	return results, nil
 }
 
-func GeoNearSphereQuery(client *mongo.Database, polygon []float64, radius int) ([]FullGeoJson, error) {
+func GeoNearSphereQuery(client *mongo.Database, polygon []float64, radius float64) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 	filter := bson.M{
 		"geometry": bson.M{
@@ -161,13 +161,13 @@ func GeoBoxQuery(client *mongo.Database, lowerLeft, upperRight []float64) ([]Ful
 	return results, nil
 }
 
-func GeoCenterQuery(client *mongo.Database, center []float64, radius int) ([]FullGeoJson, error) {
+func GeoCenterQuery(client *mongo.Database, center []float64, radius float64) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 
 	filter := bson.M{
 		"geometry": bson.M{
 			"$geoWithin": bson.M{
-				"$centerSphere": []interface{}{center, float64(radius) / 6371000},
+				"$centerSphere": []interface{}{center, radius},
 			},
 		},
 	}
@@ -216,7 +216,7 @@ func GeoGeometryQuery(client *mongo.Database, geometry bson.M) ([]FullGeoJson, e
 
 	return results, nil
 }
-func GeoMaxDistanceQuery(client *mongo.Database, point []float64, maxDistance int) ([]FullGeoJson, error) {
+func GeoMaxDistanceQuery(client *mongo.Database, point []float64, maxDistance float64) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 	filter := bson.M{
 		"geometry": bson.M{
@@ -243,7 +243,7 @@ func GeoMaxDistanceQuery(client *mongo.Database, point []float64, maxDistance in
 	return results, nil
 }
 
-func GeoMinDistanceQuery(client *mongo.Database, point []float64, minDistance int) ([]FullGeoJson, error) {
+func GeoMinDistanceQuery(client *mongo.Database, point []float64, minDistance float64) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 
 	filter := bson.M{

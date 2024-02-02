@@ -30,7 +30,7 @@ type RequestGeonear struct {
 }
 
 type Nearspherereq struct {
-	Radius      int       `bson:"radius" json:"radius"`
+	Radius      float64   `bson:"radius" json:"radius"`
 	Coordinates []float64 `bson:"coordinates" json:"coordinates"`
 }
 
