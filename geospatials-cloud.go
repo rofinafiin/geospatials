@@ -38,7 +38,7 @@ func GeoIntersectcloud(publickey, Mongostring, dbname string, r *http.Request) s
 
 func GeoNearcloud(publickey, Mongostring, dbname string, r *http.Request) string {
 	resp := new(pasproj.Credential)
-	req := new(RequestGeoIntersects)
+	req := new(RequestGeonear)
 	conn := pasproj.MongoCreateConnection(Mongostring, dbname)
 	tokenlogin := r.Header.Get("Login")
 	if tokenlogin == "" {
@@ -50,7 +50,7 @@ func GeoNearcloud(publickey, Mongostring, dbname string, r *http.Request) string
 			resp.Status = false
 			resp.Message = "Kamu kayaknya belum punya akun"
 		} else {
-			datageo, err := GeoNearQuery(conn, req.Coordinates, 100)
+			datageo, err := GeoNearQuery(conn, req.Coordinates, req.MaxDistance, req.MinDistance)
 			if err != nil {
 				resp.Status = false
 				resp.Message = err.Error()

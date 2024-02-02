@@ -67,7 +67,7 @@ func GeoWithinQuery(client *mongo.Database, polygon [][][]float64) ([]LocationDa
 	return results, nil
 }
 
-func GeoNearQuery(client *mongo.Database, polygon [][][]float64, maxDistance int) ([]LocationData, error) {
+func GeoNearQuery(client *mongo.Database, polygon [][][]float64, maxDistance, minDistance int) ([]LocationData, error) {
 	collection := client.Collection("location")
 	filter := bson.M{
 		"border": bson.M{
@@ -77,7 +77,7 @@ func GeoNearQuery(client *mongo.Database, polygon [][][]float64, maxDistance int
 					"coordinates": polygon,
 				},
 				"$maxDistance": maxDistance,
-				"$minDistance": 1,
+				"$minDistance": minDistance,
 			},
 		},
 	}

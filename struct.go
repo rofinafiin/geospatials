@@ -20,6 +20,12 @@ type RequestGeoIntersects struct {
 	Coordinates [][][]float64 `bson:"coordinates" json:"coordinates"`
 }
 
+type RequestGeonear struct {
+	Coordinates [][][]float64 `bson:"coordinates" json:"coordinates"`
+	MinDistance int           `bson:"minDistance" json:"minDistance"`
+	MaxDistance int           `bson:"maxDistance" json:"maxDistance"`
+}
+
 type Nearspherereq struct {
 	Radius      int       `bson:"radius" json:"radius"`
 	Coordinates []float64 `bson:"coordinates" json:"coordinates"`
