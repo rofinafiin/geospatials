@@ -135,13 +135,9 @@ func GeoBoxQuery(client *mongo.Database, lowerLeft, upperRight []float64) ([]Ful
 		"geometry": bson.M{
 			"$geoWithin": bson.M{
 				"$geometry": bson.M{
-					"type": "Polygon",
-					"coordinates": [][]float64{
-						{lowerLeft[0], lowerLeft[1]},
-						{upperRight[0], lowerLeft[1]},
-						{upperRight[0], upperRight[1]},
-						{lowerLeft[0], upperRight[1]},
-						{lowerLeft[0], lowerLeft[1]},
+					"$box": [][]float64{
+						lowerLeft,
+						upperRight,
 					},
 				},
 			},
