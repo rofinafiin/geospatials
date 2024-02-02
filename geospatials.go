@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func GeoIntersectQuery(client *mongo.Database, polygon [][][]float64) ([]LocationData, error) {
+func GeoIntersectQuery(client *mongo.Database, polygon [][][]float64) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 
 	filter := bson.M{
@@ -30,7 +30,7 @@ func GeoIntersectQuery(client *mongo.Database, polygon [][][]float64) ([]Locatio
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func GeoIntersectQuery(client *mongo.Database, polygon [][][]float64) ([]Locatio
 	return results, nil
 }
 
-func GeoWithinQuery(client *mongo.Database, polygon [][][]float64) ([]LocationData, error) {
+func GeoWithinQuery(client *mongo.Database, polygon [][][]float64) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 	filter := bson.M{
 		"geometry": bson.M{
@@ -59,7 +59,7 @@ func GeoWithinQuery(client *mongo.Database, polygon [][][]float64) ([]LocationDa
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
@@ -67,13 +67,13 @@ func GeoWithinQuery(client *mongo.Database, polygon [][][]float64) ([]LocationDa
 	return results, nil
 }
 
-func GeoNearQuery(client *mongo.Database, polygon [][][]float64, maxDistance, minDistance int) ([]LocationData, error) {
+func GeoNearQuery(client *mongo.Database, polygon []float64, maxDistance, minDistance int) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 	filter := bson.M{
 		"geometry": bson.M{
 			"$near": bson.M{
 				"$geometry": bson.M{
-					"type":        "Polygon",
+					"type":        "Point",
 					"coordinates": polygon,
 				},
 				"$maxDistance": maxDistance,
@@ -90,7 +90,7 @@ func GeoNearQuery(client *mongo.Database, polygon [][][]float64, maxDistance, mi
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func GeoNearQuery(client *mongo.Database, polygon [][][]float64, maxDistance, mi
 	return results, nil
 }
 
-func GeoNearSphereQuery(client *mongo.Database, polygon []float64, radius int) ([]LocationData, error) {
+func GeoNearSphereQuery(client *mongo.Database, polygon []float64, radius int) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 	filter := bson.M{
 		"geometry": bson.M{
@@ -121,7 +121,7 @@ func GeoNearSphereQuery(client *mongo.Database, polygon []float64, radius int) (
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
@@ -129,7 +129,7 @@ func GeoNearSphereQuery(client *mongo.Database, polygon []float64, radius int) (
 	return results, nil
 }
 
-func GeoBoxQuery(client *mongo.Database, lowerLeft, upperRight []float64) ([]LocationData, error) {
+func GeoBoxQuery(client *mongo.Database, lowerLeft, upperRight []float64) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 	filter := bson.M{
 		"geometry": bson.M{
@@ -156,7 +156,7 @@ func GeoBoxQuery(client *mongo.Database, lowerLeft, upperRight []float64) ([]Loc
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
@@ -164,7 +164,7 @@ func GeoBoxQuery(client *mongo.Database, lowerLeft, upperRight []float64) ([]Loc
 	return results, nil
 }
 
-func GeoCenterQuery(client *mongo.Database, center []float64, radius int) ([]LocationData, error) {
+func GeoCenterQuery(client *mongo.Database, center []float64, radius int) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 
 	filter := bson.M{
@@ -184,7 +184,7 @@ func GeoCenterQuery(client *mongo.Database, center []float64, radius int) ([]Loc
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
@@ -192,7 +192,7 @@ func GeoCenterQuery(client *mongo.Database, center []float64, radius int) ([]Loc
 	return results, nil
 }
 
-func GeoGeometryQuery(client *mongo.Database, geometry bson.M) ([]LocationData, error) {
+func GeoGeometryQuery(client *mongo.Database, geometry bson.M) ([]FullGeoJson, error) {
 	// Actual implementation of the function
 	collection := client.Collection("geogis")
 	filter := bson.M{
@@ -212,14 +212,14 @@ func GeoGeometryQuery(client *mongo.Database, geometry bson.M) ([]LocationData, 
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
 
 	return results, nil
 }
-func GeoMaxDistanceQuery(client *mongo.Database, point []float64, maxDistance int) ([]LocationData, error) {
+func GeoMaxDistanceQuery(client *mongo.Database, point []float64, maxDistance int) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 	filter := bson.M{
 		"geometry": bson.M{
@@ -238,7 +238,7 @@ func GeoMaxDistanceQuery(client *mongo.Database, point []float64, maxDistance in
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
@@ -246,7 +246,7 @@ func GeoMaxDistanceQuery(client *mongo.Database, point []float64, maxDistance in
 	return results, nil
 }
 
-func GeoMinDistanceQuery(client *mongo.Database, point []float64, minDistance int) ([]LocationData, error) {
+func GeoMinDistanceQuery(client *mongo.Database, point []float64, minDistance int) ([]FullGeoJson, error) {
 	collection := client.Collection("geogis")
 
 	filter := bson.M{
@@ -267,7 +267,7 @@ func GeoMinDistanceQuery(client *mongo.Database, point []float64, minDistance in
 	}
 	defer cursor.Close(ctx)
 
-	var results []LocationData
+	var results []FullGeoJson
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
