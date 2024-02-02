@@ -77,6 +77,7 @@ func GeoNearQuery(client *mongo.Database, polygon [][][]float64, maxDistance int
 					"coordinates": polygon,
 				},
 				"$maxDistance": maxDistance,
+				"$minDistance": 1,
 			},
 		},
 	}
