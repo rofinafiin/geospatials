@@ -107,6 +107,7 @@ func GeoNearSphereQuery(client *mongo.Database, polygon []float64, radius int) (
 					"type":        "Point",
 					"coordinates": polygon,
 				},
+				"$minDistance": 1,
 				"$maxDistance": radius,
 			},
 		},
